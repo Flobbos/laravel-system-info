@@ -2,9 +2,9 @@
 
 ![Laravel System Info](img/laravel-system-info.png)
 
-A minimalist Laravel package to expose system information (Laravel version, PHP version, installed packages, and outdated packages) via a secure API endpoint. This package is designed for integration with systems like ServerSync, allowing centralized monitoring of Laravel sites alongside WordPress installations. It uses its own token-based authentication middleware, independent of Sanctum or other auth systems.
+A minimalist Laravel package to expose system information (Laravel version, PHP version, installed packages, and outdated packages) via a secure API endpoint. This package is designed to allow centralized monitoring of Laravel sites. It uses its own token-based authentication middleware, independent of Sanctum or other auth systems.
 
-The package supports Laravel 9+ and is part of a larger project to expand functionality between Laravel and WordPress, including API-driven updates for plugins on WordPress sites.
+The package supports Laravel 9+ for the moment.
 
 ## Installation
 
@@ -54,7 +54,7 @@ The package supports Laravel 9+ and is part of a larger project to expand functi
     }
     ```
 
--   You can use this endpoint to fetch and display info for Laravel sites, similar to WordPress metadata.
+-   You can use this endpoint to fetch and display info for Laravel sites.
 
 ## Configuration
 
