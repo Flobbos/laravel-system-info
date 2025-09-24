@@ -3,7 +3,8 @@
 namespace Flobbos\LaravelSystemInfo;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Log;
 
 class SystemInfoController
 {
@@ -20,10 +21,42 @@ class SystemInfoController
         ];
     }
 
-    protected function runComposerCommand($command)
+    protected function runComposerCommand(string $command)
     {
-        Artisan::call('shell:exec', ['command' => "composer $command --no-interaction"]);
-        $output = Artisan::output();
-        return json_decode($output, true);
+        $composerPath = $this->getComposerPath();
+        $fullCommand = $composerPath . ' ' . $command . ' --no-interaction';
+
+        $process = new Process(explode(' ', $fullCommand)); // Split for Process
+        $process->setWorkingDirectory(base_path());
+        $process->setEnv([
+            'COMPOSER_HOME' => storage_path('composer'),
+            'HOME' => storage_path('composer'),
+        ]);
+        $process->run();
+
+        if ($process->isSuccessful()) {
+            $output = json_decode($process->getOutput(), true);
+            return is_array($output) ? $output : [];
+        }
+
+        return [];
+    }
+
+    protected function getComposerPath()
+    {
+        $paths = [
+            '/usr/local/bin/composer',
+            '/usr/bin/composer',
+            base_path('composer'),
+        ];
+
+        foreach ($paths as $path) {
+            if (file_exists($path) && is_executable($path)) {
+                Log::debug('Found Composer path', ['path' => $path]);
+                return $path;
+            }
+        }
+
+        return 'composer';
     }
 }
