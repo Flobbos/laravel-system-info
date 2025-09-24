@@ -2,9 +2,11 @@
 
 namespace Flobbos\LaravelSystemInfo;
 
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\Process\Process;
+
 
 class SystemInfoController
 {
@@ -16,8 +18,8 @@ class SystemInfoController
         return [
             'laravel_version' => app()->version(),
             'php_version' => phpversion(),
-            'installed_packages' => $composerShow ?? [],
-            'outdated_packages' => $composerOutdated ?? [],
+            'installed_packages' => Arr::get($composerShow, 'installed', []),
+            'outdated_packages' => Arr::get($composerOutdated, 'installed', []),
         ];
     }
 
